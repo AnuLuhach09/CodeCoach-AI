@@ -33,23 +33,33 @@ app.use(helmet());
 // CORS_ORIGIN accepts a comma-separated list of allowed origins, e.g.
 // "https://my-frontend.up.railway.app,http://localhost:3000". Falls back to
 // localhost:3000 for local development if not set.
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const allowedOrigins = (
+  process.env.CORS_ORIGIN || "http://localhost:3000"
+)
+.split(",")
+.map(origin => origin.trim());
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (curl, server-to-server, health checks)
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      logger.warn(`Blocked by CORS: ${origin}`);
-      return callback(new Error('Not allowed by CORS'));
+app.use(cors({
+    origin: function(origin, callback) {
+
+        if (!origin) {
+            return callback(null, true);
+        }
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        console.log("Blocked Origin:", origin);
+
+        callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  })
+    methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"]
+}));
+
+app.options("*", cors());
 );
 app.use(compression());
 app.use(express.json({ limit: '50mb' }));
@@ -65,7 +75,12 @@ app.use(
     },
   })
 );
+app.use(cookieParser());
 
+app.use((req, res, next) => {
+  console.log(req.method, req.url, req.headers.origin);
+  next();
+});
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() });
