@@ -75,7 +75,7 @@ app.use(
     },
   })
 );
-app.use(cookieParser());
+
 
 app.use((req, res, next) => {
   console.log(req.method, req.url, req.headers.origin);
