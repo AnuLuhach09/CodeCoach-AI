@@ -62,8 +62,6 @@ The application supports multiple AI providers, semantic code search, GitHub rep
 ### ⚙️ AI Configuration
 Supports multiple AI providers including:
 
-- OpenAI
-- Anthropic Claude
 - Google Gemini
 - Groq
 - OpenRouter
@@ -134,9 +132,7 @@ Users can configure:
 
 ## AI Technologies
 
-- OpenAI GPT
 - Google Gemini
-- Anthropic Claude
 - Groq
 - OpenRouter
 - Ollama
@@ -251,11 +247,7 @@ DATABASE_URL=
 
 JWT_SECRET=
 
-OPENAI_API_KEY=
-
 GEMINI_API_KEY=
-
-ANTHROPIC_API_KEY=
 
 GROQ_API_KEY=
 

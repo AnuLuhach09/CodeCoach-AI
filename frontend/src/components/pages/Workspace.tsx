@@ -776,7 +776,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ onBackToDashboard, project
                     fontFamily: 'JetBrains Mono',
                     minimap: { enabled: true },
                     automaticLayout: true,
-                    formatOnSave: true,
+                    minimap: { enabled: false },
                     lineNumbers: 'on',
                     wordWrap: 'on',
                   }}
