@@ -14,14 +14,13 @@ export class AnalysisController {
         return sendError(res, 'BAD_REQUEST', 'Action and code content are required', 400);
       }
 
-      // Get user settings for model selection
       let settings = await settingRepository.findByUserId(req.user!.id);
       if (!settings) {
         settings = {
           id: '',
           userId: req.user!.id,
-          aiProvider: 'openai',
-          aiModel: 'gpt-4o',
+          aiProvider: 'groq',
+          aiModel: 'llama-3.1-8b-instant',
           temperature: 0.5,
           maxTokens: 3000,
           isStreaming: true,

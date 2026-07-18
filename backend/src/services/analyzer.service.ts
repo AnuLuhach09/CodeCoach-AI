@@ -3,7 +3,7 @@ import { aiService } from './ai.service';
 import { logger } from '../utils/logger';
 
 export class AnalyzerService {
-  async analyzeProject(projectId: string, provider: string = 'openai', model: string = 'gpt-4o'): Promise<{
+  async analyzeProject(projectId: string, provider: string = 'groq', model: string = 'llama-3.1-8b-instant'): Promise<{
     scoreCodeQuality: number;
     scoreSecurity: number;
     reportArchitecture: any;

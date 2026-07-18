@@ -80,14 +80,13 @@ export class ChatController {
         content,
       });
 
-      // Get user settings
       let settings = await settingRepository.findByUserId(req.user!.id);
       if (!settings) {
         settings = {
           id: '',
           userId: req.user!.id,
-          aiProvider: 'openai',
-          aiModel: 'gpt-4o',
+          aiProvider: 'groq',
+          aiModel: 'llama-3.1-8b-instant',
           temperature: 0.7,
           maxTokens: 2048,
           isStreaming: true,

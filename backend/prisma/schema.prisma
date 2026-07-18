@@ -133,8 +133,8 @@ model Analysis {
 model Setting {
   id                     String   @id @default(uuid())
   userId                 String   @unique
-  aiProvider             String   @default("openai")
-  aiModel                String   @default("gpt-4o")
+  aiProvider             String   @default("groq")
+  aiModel                String   @default("llama-3.1-8b-instant")
   temperature            Float    @default(0.7)
   maxTokens              Int      @default(2048)
   isStreaming            Boolean  @default(true)
