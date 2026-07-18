@@ -1,99 +1,296 @@
-# Enterprise AI Coding Assistant
+# 🚀 CodeCoach AI – AI-Powered Coding Interview Preparation Platform
 
-An enterprise-level AI Coding Assistant from scratch (similar to ChatGPT + Cursor + Copilot) containing a Express + TypeScript backend and React 19 + Vite frontend.
+CodeCoach AI is a full-stack AI-powered coding interview preparation platform that helps users improve their programming skills through an interactive coding environment, AI-generated hints, code analysis, and interview-focused practice.
 
-## Key Features
-
-1. **AI Chat & Streaming**: Stream responses word-by-word (Server-Sent Events) with memory context.
-2. **RAG Integration**: Retreive relevant codebase chunks before every query using ChromaDB.
-3. **GitHub Analyzer**: Clones repository, parses files, and computes multidimensional Quality & Security scores.
-4. **Drag & Drop Folder & Zip Uploads**: Ingest folders and extract ZIPs directly to database and index them.
-5. **Monaco Editor integration**: Syntax highlighting, custom theme, and file tabs.
-6. **AI Code Triggers**: Short-cut controls to Explain, Optimize, Debug, Write Tests, and Generate Docs.
-7. **User Profile & Settings**: Select AI Providers, customize models (OpenAI, Anthropic, Gemini, Groq, OpenRouter, Ollama) and temperatures.
+The platform combines a modern React frontend with a scalable Node.js backend to provide an intelligent coding assistant experience.
 
 ---
 
-## Tech Stack
+## 📌 Features
 
-### Backend
-- **Node.js** & **Express.js** with **TypeScript**
-- **Prisma ORM** with **PostgreSQL**
-- **Redis** for session cache
-- **ChromaDB** for vector similarity searches
-- **Winston** & **Morgan** for HTTP and error logging
+### 👨‍💻 Coding Workspace
+- Interactive online code editor
+- Syntax highlighting
+- Real-time coding experience
+- Clean and responsive UI
 
-### Frontend
-- **React 19** & **TypeScript** with **Vite**
-- **Zustand** for state stores
-- **TailwindCSS** for styles (supporting Dark and Light modes)
-- **TanStack Query** (React Query)
-- **Monaco Editor**
+### 🤖 AI Coding Assistant
+- AI-generated coding hints
+- Code explanation
+- Bug detection
+- Optimization suggestions
+- Interview-oriented guidance
+
+### 📂 Project Management
+- Upload coding files
+- Organize projects
+- Save coding sessions
+- Manage coding history
+
+### 🔐 Authentication
+- Secure user registration
+- Login system
+- JWT Authentication
+- Password encryption
+
+### 📊 Performance Tracking
+- Coding history
+- Progress monitoring
+- Practice management
+
+### ⚡ Modern UI
+- Responsive Design
+- Smooth animations
+- Dark theme support
+- Mobile-friendly interface
 
 ---
 
-## Getting Started
+# 🛠️ Tech Stack
 
-### 1. Prerequisite Containers
-Ensure your Docker Daemon is running, then spin up PostgreSQL, Redis, and ChromaDB:
-```bash
-docker-compose up -d
+## Frontend
+
+- React
+- React Router
+- React Query
+- Zustand
+- Tailwind CSS
+- Monaco Code Editor
+- Framer Motion
+- Axios
+
+## Backend
+
+- Node.js
+- Express.js
+- Prisma ORM
+- JWT Authentication
+- Redis
+- ChromaDB
+- OpenAI API
+- Multer
+- Winston Logger
+
+## Database
+
+- Prisma ORM
+- SQL Database (configured through Prisma)
+
+---
+
+# 📁 Project Structure
+
+```
+CodeCoachAI
+│
+├── frontend
+│   ├── src
+│   ├── public
+│   └── package.json
+│
+├── backend
+│   ├── controllers
+│   ├── routes
+│   ├── middleware
+│   ├── prisma
+│   ├── services
+│   ├── uploads
+│   └── package.json
+│
+├── docker-compose.yml
+└── README.md
 ```
 
-### 2. Configure Environment variables
-Set up your AI API keys and database strings in `backend/.env` (cloned from `.env.example`).
+---
 
-### 3. Setup Backend
+# ⚙️ Installation
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/yourusername/CodeCoachAI.git
+
+cd CodeCoachAI
+```
+
+---
+
+## 2. Install Frontend
+
+```bash
+cd frontend
+
+npm install
+```
+
+---
+
+## 3. Install Backend
+
+```bash
+cd ../backend
+
+npm install
+```
+
+---
+
+## 4. Configure Environment Variables
+
+Create a `.env` file inside the backend directory.
+
+Example:
+
+```env
+PORT=5000
+
+DATABASE_URL=
+
+JWT_SECRET=
+
+OPENAI_API_KEY=
+
+REDIS_URL=
+```
+
+---
+
+## 5. Start Backend
+
 ```bash
 cd backend
-npm install
-npx prisma generate
-npx prisma migrate dev --name init
+
 npm run dev
 ```
-The backend server runs on `http://localhost:5000`.
 
-### 4. Setup Frontend
+---
+
+## 6. Start Frontend
+
 ```bash
-cd ../frontend
-npm install
+cd frontend
+
 npm run dev
 ```
-The frontend dev server runs on `http://localhost:3000`.
 
 ---
 
-## Deploying to Railway
+# 🐳 Docker
 
-Chroma and Redis are now **optional** — the app boots and runs fully (auth, projects, chat, files, GitHub analysis) without them. RAG/embeddings-based context is the only feature disabled when `CHROMA_URL` is unset.
+Run the complete application using Docker.
 
-Deploy as two Railway services from this one repo:
-
-### 1. Backend service
-- Root directory: `backend/`
-- Add a **PostgreSQL** plugin (Railway sets `DATABASE_URL` automatically).
-- Env vars to set:
-  - `JWT_SECRET`, `JWT_REFRESH_SECRET`
-  - `CORS_ORIGIN` — the frontend service's public URL (set after step 2)
-  - `CROSS_SITE_COOKIES=true` (frontend and backend are on different subdomains)
-  - Your AI provider key(s) (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.)
-  - Leave `REDIS_URL` / `CHROMA_URL` unset unless you've provisioned those services
-- `railway.json` in this folder builds with `npm install && npm run build`, runs `npm run start` (which runs `prisma migrate deploy` before booting), and health-checks `/health`.
-
-### 2. Frontend service
-- Root directory: `frontend/`
-- Env var: `VITE_API_URL` — the backend service's public URL + `/api`, e.g. `https://<backend>.up.railway.app/api`
-- `railway.json` in this folder builds with `npm install && npm run build` and serves the static `dist/` output via `serve` (`npm run start`).
-- Note: `VITE_API_URL` is baked in at build time. If you change it, trigger a redeploy so the frontend rebuilds.
-
-### 3. Wire them together
-- Set the backend's `CORS_ORIGIN` to the frontend's Railway URL, and redeploy the backend.
-- Optional: add Railway's Redis plugin and set `REDIS_URL` to enable caching, or deploy a ChromaDB instance and set `CHROMA_URL` to enable RAG search — both are picked up automatically with no code changes.
+```bash
+docker-compose up --build
+```
 
 ---
 
-## Architecture & Code Quality
-- Follows **Repository Pattern** and **Service Layer** structure for modularity and isolation.
-- Extensively typed using TypeScript.
-- Implements strict input verification schemas using **Zod** and request parameter filters.
-- Secure session storage utilizing short-lived access JWT tokens and HTTP-Only refresh cookies.
+# 📸 Application Screenshots
+
+## 🔐 Login Page
+
+Secure authentication system with email/password login and JWT-based session management.
+
+![Login Page](./screenshots/login.png)
+
+---
+
+## 📊 Dashboard
+
+The dashboard provides an overview of user projects, AI chat sessions, token usage, and code quality metrics.
+
+![Dashboard](./screenshots/dashboard.png)
+
+---
+
+## 👤 Profile Preferences
+
+Users can personalize their profile, select their preferred programming language, and switch between light and dark themes.
+
+![Profile Preferences](./screenshots/profile.png)
+
+---
+
+## ⚙️ AI Configuration Settings
+
+Configure AI provider, select language models, adjust temperature, set maximum output tokens, and enable token streaming.
+
+![Configuration Settings](./screenshots/settings.png)
+
+---
+
+## 📂 Clone GitHub Repository
+
+Clone any public GitHub repository directly into CodeCoach AI for instant code analysis and AI-powered auditing.
+
+![Clone Repository](./screenshots/clone-repository.png)
+
+
+
+---
+
+# 🔐 Security Features
+
+- JWT Authentication
+- Password Hashing
+- Rate Limiting
+- Helmet Security
+- CORS Protection
+- Secure API Design
+
+---
+
+# 🚀 Future Improvements
+
+- Voice-based AI Interviewer
+- Live Coding Contests
+- AI Mock Interviews
+- Resume Analyzer
+- Company-wise Coding Sheets
+- Leaderboard
+- Multi-language Code Execution
+- Video Interview Support
+
+---
+
+# 📚 Learning Outcomes
+
+This project helped in understanding:
+
+- Full Stack Development
+- REST API Design
+- Authentication & Authorization
+- State Management
+- Database Design
+- AI API Integration
+- Docker Deployment
+- Secure Backend Development
+- Modern React Development
+
+---
+
+# 👨‍💻 Author
+
+**Anu Luhach**
+
+B.Tech Computer Science Engineering
+
+Passionate about Full Stack Development, Artificial Intelligence, and Software Engineering.
+
+GitHub: https://github.com/yourusername
+
+LinkedIn: https://linkedin.com/in/yourprofile
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It motivates future development and improvements.
+
+---
+
+# 📄 License
+
+This project is intended for educational and learning purposes.
