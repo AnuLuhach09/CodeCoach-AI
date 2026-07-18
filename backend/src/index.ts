@@ -25,45 +25,45 @@ import settingsRoutes from './routes/settings.routes';
 import analysisRoutes from './routes/analysis.routes';
 
 const app = express();
-app.options('*', (req, res) => {
-  console.log("========== OPTIONS ==========");
-  console.log(req.originalUrl);
-  console.log(req.headers.origin);
+const allowedOrigins = (
+  process.env.CORS_ORIGIN || "http://localhost:3000"
+)
+.split(",")
+.map(origin => origin.trim().replace(/\/$/, ""));
 
-  res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN!);
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  if (origin) {
+    const normalizedOrigin = origin.replace(/\/$/, "");
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      res.header("Access-Control-Allow-Origin", origin);
+    }
+  }
+
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
   return res.sendStatus(204);
 });
+
 const port = process.env.PORT || 5000;
 
 // Security and utility middlewares
 app.use(helmet());
 
-// CORS_ORIGIN accepts a comma-separated list of allowed origins, e.g.
-// "https://my-frontend.up.railway.app,http://localhost:3000". Falls back to
-// localhost:3000 for local development if not set.
-const allowedOrigins = (
-  process.env.CORS_ORIGIN || "http://localhost:3000"
-)
-.split(",")
-.map(origin => origin.trim());
-
 app.use(cors({
     origin: function(origin, callback) {
-
         if (!origin) {
             return callback(null, true);
         }
 
-        if (allowedOrigins.includes(origin)) {
+        const normalizedOrigin = origin.replace(/\/$/, "");
+        if (allowedOrigins.includes(normalizedOrigin)) {
             return callback(null, true);
         }
 
         console.log("Blocked Origin:", origin);
-
         callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
