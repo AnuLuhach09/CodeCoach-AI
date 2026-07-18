@@ -98,6 +98,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+console.log(">>> Auth routes mounted");
 app.use('/api/projects', projectRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/files', fileRoutes);
