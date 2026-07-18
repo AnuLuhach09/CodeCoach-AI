@@ -7,7 +7,7 @@ function humanizeAIError(raw: string): string {
   if (raw.includes('quota') || raw.includes('RESOURCE_EXHAUSTED') || raw.includes('429')) {
     return 'API quota exceeded. Please check your provider account limits.';
   }
-  if (raw.includes('UNAUTHENTICATED') || raw.includes('invalid authentication') || raw.includes('401') || raw.includes('API_KEY_INVALID')) {
+  if (raw.includes('UNAUTHENTICATED') || raw.includes('invalid authentication') || raw.includes('401') || raw.includes('API_KEY_INVALID') || raw.includes('User not found')) {
     return 'Invalid or expired API key. Please check your API key settings.';
   }
   if (raw === 'AggregateError' || raw.includes('ECONNREFUSED') || raw.includes('connect ECONNREFUSED')) {
