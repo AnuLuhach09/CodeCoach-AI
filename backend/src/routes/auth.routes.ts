@@ -6,6 +6,9 @@ import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema 
 import { authLimiter } from '../middlewares/rateLimiter';
 
 const router = Router();
+router.get('/test', (req, res) => {
+    res.json({ message: "Auth router is working" });
+  });
 
 router.post('/register', authLimiter, validate(registerSchema), authController.register);
 router.post('/login', authLimiter, validate(loginSchema), authController.login);
